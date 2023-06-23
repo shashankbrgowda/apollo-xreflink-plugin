@@ -1,6 +1,6 @@
 {
-  "version": "0.0.1",
-  "name": "jbrowse-plugin-template",
+  "version": "0.0.7",
+  "name": "apollo-xreflink-plugin",
   "keywords": [
     "jbrowse",
     "jbrowse2"
@@ -19,7 +19,7 @@
     },
     "jbrowse": {
       "plugin": {
-        "name": "Template"
+        "name": "ApolloXrefLinkPlugin"
       }
     }
   },
@@ -48,7 +48,7 @@
     "postversion": "git push --follow-tags"
   },
   "jbrowse-plugin": {
-    "name": "Template"
+    "name": "ApolloXrefLinkPlugin"
   },
   "prettier": {
     "semi": false,
@@ -56,6 +56,7 @@
     "trailingComma": "all"
   },
   "dependencies": {
+    "json-server": "^0.17.3",
     "regenerator-runtime": "^0.13.9",
     "tslib": "^2.3.1"
   },
@@ -115,5 +116,7 @@
     "tss-react": "^3.0.0",
     "typescript": "^4.1.3"
   },
-  "private": true
+  "private": false,
+  "repository": "https://github.com/shashankbrgowda/apollo-xreflink-plugin.git",
+  "license": "Apache License 2.0"
 }

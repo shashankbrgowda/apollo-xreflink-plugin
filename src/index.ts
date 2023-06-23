@@ -1,35 +1,51 @@
 import Plugin from '@jbrowse/core/Plugin'
 import PluginManager from '@jbrowse/core/PluginManager'
-import ViewType from '@jbrowse/core/pluggableElementTypes/ViewType'
-import { AbstractSessionModel, isAbstractMenuManager } from '@jbrowse/core/util'
 import { version } from '../package.json'
-import {
-  ReactComponent as HelloViewReactComponent,
-  stateModel as helloViewStateModel,
-} from './HelloView'
 
 export default class TemplatePlugin extends Plugin {
-  name = 'TemplatePlugin'
+  name = 'ApolloXrefLinkPlugin'
   version = version
 
-  install(pluginManager: PluginManager) {
-    pluginManager.addViewType(() => {
-      return new ViewType({
-        name: 'HelloView',
-        stateModel: helloViewStateModel,
-        ReactComponent: HelloViewReactComponent,
+  getIds = (id: any) => {
+    return Array.isArray(id) ? id : [id]
+  }
+
+  getLinks = (ids: Array<any>, url: any, key: any) => {
+    return ids
+      .filter((id) => id !== '-')
+      .map((id) => {
+        return `<a href=${url}${id}>${key}:${id}</a>`
       })
-    })
+  }
+
+  getDbXrefLink = (id: any, url_mapping: any) => {
+    const [root, content1, content2] = id.split(':')
+    return content2
+      ? `<a href=${url_mapping[root]}${content1}:${content2}>${id}</a>`
+      : `<a href=${url_mapping[root]}${content1}>${id}</a>`
   }
 
   configure(pluginManager: PluginManager) {
-    if (isAbstractMenuManager(pluginManager.rootModel)) {
-      pluginManager.rootModel.appendToMenu('Add', {
-        label: 'Hello View',
-        onClick: (session: AbstractSessionModel) => {
-          session.addView('HelloView', {})
-        },
-      })
-    }
+    pluginManager.jexl.addFunction(
+      'apolloxreflink',
+      (dict: Record<string, string>, feature: any) => {
+        let xrefs: any[] = []
+        const dbxref_aliases = ['dbxref', 'dbxref', 'db_xref']
+
+        Object.keys(dict).forEach((key) => {
+          if (feature[key]) {
+            if (dbxref_aliases.includes(key.toLowerCase())) {
+              this.getIds(feature[key]).forEach((id) => {
+                xrefs.push(this.getDbXrefLink(id, dict[key]))
+              })
+            } else {
+              const ids: any[] = this.getIds(feature[key])
+              xrefs.push(...this.getLinks(ids, dict[key], key))
+            }
+          }
+        })
+        return xrefs
+      },
+    )
   }
 }
