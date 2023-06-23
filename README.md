@@ -22,7 +22,7 @@ A JBrowse Web config using this plugin would look like this:
       "feature": "jexl: {xrefs:apolloxreflink({interpro: 'https://www.ebi.ac.uk/interpro/entry/InterPro/',db_xref: {COG: 'https://www.ncbi.nlm.nih.gov/research/cog/cog/'}}, feature)}",
       "subfeatures": "jexl: {xrefs:apolloxreflink({interpro: 'https://www.ebi.ac.uk/interpro/entry/InterPro/',db_xref: {COG: 'https://www.ncbi.nlm.nih.gov/research/cog/cog/'}}, feature)}"
     }
-  }
+  },
   "plugins": [
     {
       "name": "ApolloXrefLinkPlugin",
